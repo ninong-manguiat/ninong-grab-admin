@@ -1,0 +1,91 @@
+body{
+    padding: 0;
+    margin: 0;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    position: fixed;
+    min-width: 100% !important;
+    overflow-y: hidden;
+    background-color: white;
+}
+
+html{
+    position: fixed;
+    min-width: 100%;
+}
+
+.root{
+    background-color: white;
+}
+
+.App{
+    .headerfd{
+        background-color: #ffffff;
+        border-bottom: 0.5rem solid #B21D20;
+        font-size: 2rem;
+        color: white;
+        display: flex;
+        padding-right: 5rem;
+
+        .headertitle{
+            margin: 1.5rem 0rem;
+        }
+
+        .hamb{
+            margin: 1rem;
+        }
+
+        .systitle{
+            color: #B21D20;
+            padding-left: 2rem;
+            // padding-top: 0.5rem;
+        }
+
+        .logo-fd{
+            width: 12rem;
+            height: auto;
+        }
+
+        label{
+            font-size: 2rem;
+            color: white;
+            padding-top: 2.3rem;
+        }
+    }
+
+    .drivers{
+        margin: 1.5rem;
+    }
+}
+
+.pushable .sidebarx{
+    .last{
+        position: fixed !important;
+        bottom: 0 !important;
+        text-align: center !important;
+        width: 100% !important;
+    }
+
+    .headtext{
+        margin: 2rem!important;
+
+        .content{
+            color: white !important;
+        }
+    }
+}
+
+.bookings{
+    .sidebar-list{
+        height: 90vh;
+        overflow: auto;
+        padding: 0 !important;
+    }
+
+    .list-item-code{
+        height: 80px;
+    }
+
+    .list-item-code-list-content{
+        padding: 0.5rem 1rem !important; 
+    }
+}
