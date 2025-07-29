@@ -3,12 +3,10 @@ import { Dropdown, Button, Icon, Grid, GridColumn, GridRow } from 'semantic-ui-r
 import firebase from '../firebase'
 import { DRIVER_STATUS } from '../utils/constants'
 
-const DriverDropdown = ({handleChange, handleConfirmBooking}) => {
+const DriverDropdown = ({handleChange, handleConfirmBooking, handleCancelBooking}) => {
   const [ opt, setOpt ] = useState([])
   const [ otherDetails, setOtherDetails ] = useState({})
   const [ load, setLoad ] = useState(false)
-
-  console.log('readdddd')
 
   useEffect(() => {
       setLoad(true)
@@ -62,9 +60,9 @@ const DriverDropdown = ({handleChange, handleConfirmBooking}) => {
   }else{
     return (
       <Grid>
-        <GridRow>
 
-        <GridColumn width={10}>
+        <GridRow>
+        <GridColumn width={16}>
           <Dropdown
             placeholder='Select Driver'
             fluid
@@ -75,19 +73,29 @@ const DriverDropdown = ({handleChange, handleConfirmBooking}) => {
             onChange={(e, {key, value, details}) => handleChange(e, {key, value, details}, otherDetails)}
           />
         </GridColumn>
+        </GridRow>
 
-        <GridColumn width={6}>
-        <Button icon onClick={handleRefreshDrivers} color="grey" labelPosition='right' loading={load}>
+        <GridRow>
+        <GridColumn width={5}>
+        <Button icon onClick={handleCancelBooking} color="red" labelPosition='right' loading={load}>
+          <Icon name='cancel' />
+          Cancel Booking
+        </Button>
+        </GridColumn>
+        <GridColumn width={5}>
+        <Button icon onClick={handleRefreshDrivers} color="green" labelPosition='right' loading={load}>
           <Icon name='refresh' />
           Refresh Drivers
         </Button>
-        <Button onClick={handleConfirmBooking} color="blue" icon labelPosition='right'>
+        </GridColumn>
+        <GridColumn width={6}>
+        <Button onClick={handleConfirmBooking} color="blue" icon labelPosition='right' loading={load}>
           <Icon name='check' />
           Confirm Booking
         </Button>
         </GridColumn>
-
         </GridRow>
+
       </Grid>
     )
   }

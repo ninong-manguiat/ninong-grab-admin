@@ -1,25 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import firebase from '../firebase'
 import {
-  TableRow,
-  TableHeaderCell,
-  TableHeader,
   Header,
-  Table,
-  Rating,
-  Button,
-  Modal,
-  ModalHeader,
-  ModalContent,
-  ModalActions,
   Grid,
   GridRow,
   GridColumn,
-  Image,
   List,
   ListItem,
   ListContent,
-  Label,
   Feed,
   FeedEvent,
   FeedLabel,
@@ -27,7 +15,6 @@ import {
   HeaderSubheader,
   Divider,
   Step,
-  StepTitle,
   StepDescription,
   StepContent,
   StepGroup,
@@ -36,6 +23,8 @@ import {
 import Profile from './Profile.js'
 import DriverDropdown from './DriverDropdown.js'
 import { DRIVER_STATUS, BOOKING_STATUS } from '../utils/constants'
+import Notif from '../assets/notif.mp3';
+import useSound from 'use-sound';
 
 const Bookings = () => {
     const [book, setBookings] = useState([]);
@@ -51,11 +40,19 @@ const Bookings = () => {
         IMG: ''
     });
     const [index, setIndex] = useState(0)
-    console.log('book', book)
 
     useEffect(() => {
         fetchData()
     }, []);  // eslint-disable-line react-hooks/exhaustive-deps
+
+    const [play] = useSound(
+        Notif,
+        { volume: 0.25 }
+    );
+
+    useEffect(()=>{
+        play();
+    },[book])
 
     // METHODS
     const fetchData = async() => {
@@ -67,7 +64,6 @@ const Bookings = () => {
             const d = []
 
             querySnapshot.forEach((doc) => {
-                console.log('doic', doc.data())
                 d.push({
                     ...doc.data(),
                     ID: doc.id,
@@ -79,24 +75,14 @@ const Bookings = () => {
     }
 
     useEffect(()=>{
-        if(book){
-            setId(book[0]?.ID)    
+        if(book.length !== 0){
+            setIndex(0)  
+            setId(book[0].ID)  
         }
-    },[])
-
-    const colorStatus = (s) => {
-        switch (s) {
-            case BOOKING_STATUS.QUEUE: return 'green'
-            case BOOKING_STATUS.C1: return 'teal'
-            case BOOKING_STATUS.DONE: return 'teal'
-            case BOOKING_STATUS.CANCELLED: return 'red'
-            default: return ''
-        }
-    }
+    },[book])
     
     const handleConfirmBooking = async() => {
         const db = await firebase.firestore();
-        console.log('xxsds', id)
         db.collection("bookings").doc(id).update({
             STATUS: BOOKING_STATUS.C1,
             DRIVER: driver
@@ -114,9 +100,15 @@ const Bookings = () => {
     }
 
     const handleChange = (e, {key, value, details}, otherDetails) => {
-        console.log('ff', otherDetails)
         setDriver({
             ...otherDetails
+        })
+    }
+
+    const handleCancelBooking = async() => {
+        const db = await firebase.firestore();
+        db.collection("bookings").doc(id).update({
+            STATUS: BOOKING_STATUS.CANCELLED
         })
     }
 
@@ -136,7 +128,7 @@ const Bookings = () => {
 
     const renderItem = (b, i) => {
         return ( 
-            <ListItem className="list-item-code" onClick={() => handleIndex(i)} >
+            <ListItem className={`list-item-code ${index === i ? 'selected' : ''}`} onClick={() => handleIndex(i)} >
                 <ListContent className="list-item-code-list-content">
                     <Profile b={b} />
                 </ListContent>
@@ -149,7 +141,11 @@ const Bookings = () => {
             <Grid divided='vertically'>
                 <GridRow>
                     <GridColumn width={16}>
-                    <DriverDropdown handleChange={handleChange} handleConfirmBooking={handleConfirmBooking}/>
+                    <DriverDropdown
+                        handleChange={handleChange}
+                        handleConfirmBooking={handleConfirmBooking}
+                        handleCancelBooking={handleCancelBooking}
+                    />
                     </GridColumn>
                 </GridRow>
             </Grid>
@@ -182,7 +178,6 @@ const Bookings = () => {
     }
 
     const validateStatus = (STATUS) => {
-        console.log('statuss', STATUS)
         return STATUS === BOOKING_STATUS.C || 
         STATUS === BOOKING_STATUS.C1 || 
         STATUS === BOOKING_STATUS.C2 || 
@@ -215,7 +210,7 @@ const Bookings = () => {
     const renderSelectedData = (ind) => {
         if(book[ind] !== undefined){
             const { CUSTOMER_DETAILS, STATUS, ID, ORIGIN, DESTINATION, DATE, ROUTE_COMPUTATION, DRIVER, ACTUAL_AMOUNT } = book[ind]
-            const { NAME, CONTACT_NUMBER, REMARKS } = CUSTOMER_DETAILS
+            const { NAME, CONTACT_NUMBER, REMARKS, BOOKING_DATE, BOOKING_TIME } = CUSTOMER_DETAILS
             const { d, t } = DATE
             
             const { ESTIMATE_AMOUNT } = ROUTE_COMPUTATION
@@ -258,9 +253,16 @@ const Bookings = () => {
                         </FeedEvent>
                         <br/>
                         <FeedEvent>
-                            <FeedContent date={'BOOKING DETAILS'} summary={() => {
+                            <FeedContent date={'BOOKING DATE & TIME'} summary={() => {
                                 return(<>{`${d} ${t}`}<br/>{REMARKS}</>)
                             }} />
+                            {
+                                BOOKING_DATE && BOOKING_TIME && (
+                                <FeedContent date={'BOOKING SCHEDULE'} summary={() => {
+                                    return(<>{`${BOOKING_DATE} ${BOOKING_TIME}`}</>)
+                                }} />
+                            )
+                            }
                             <FeedContent date={'ESTIMATED AMOUNT'} summary={() => {
                                 return(<>{ESTIMATE_AMOUNT}</>)
                             }} />

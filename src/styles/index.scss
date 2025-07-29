@@ -85,6 +85,10 @@ html{
         height: 80px;
     }
 
+    .list-item-code.selected{
+        background-color: #cacaca !important;
+    }
+
     .list-item-code-list-content{
         padding: 0.5rem 1rem !important; 
     }
