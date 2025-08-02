@@ -5,7 +5,7 @@ import { DRIVER_STATUS } from '../utils/constants'
 
 const DriverDropdown = ({handleChange, handleConfirmBooking, handleCancelBooking}) => {
   const [ opt, setOpt ] = useState([])
-  const [ otherDetails, setOtherDetails ] = useState({})
+  const [ otherDetails, setOtherDetails ] = useState([])
   const [ load, setLoad ] = useState(false)
 
   useEffect(() => {
@@ -25,14 +25,15 @@ const DriverDropdown = ({handleChange, handleConfirmBooking, handleCancelBooking
         return d.STATUS === DRIVER_STATUS.AVAILABLE
       })
 
+      setOtherDetails(filtered)
+
       const driverDropdown = filtered.map((h,i)=>{
         const { DRIVER_CODE, LAST_NAME, FIRST_NAME, IMG} = h.DRIVER_DETAILS
-        setOtherDetails({...h.DRIVER_DETAILS, ACCOUNT_CODE: h.ACCOUNT_CODE})
 
         return {
-          key: `${DRIVER_CODE} - ${LAST_NAME}, ${FIRST_NAME}`,
-          text: `${DRIVER_CODE} - ${LAST_NAME}, ${FIRST_NAME}`,
-          value: `${DRIVER_CODE} - ${LAST_NAME}, ${FIRST_NAME}`,
+          key: `${DRIVER_CODE}-${LAST_NAME}, ${FIRST_NAME}`,
+          text: `${DRIVER_CODE}-${LAST_NAME}, ${FIRST_NAME}`,
+          value: `${DRIVER_CODE}-${LAST_NAME}, ${FIRST_NAME}`,
           image: {
             avatar: true,
             src: IMG

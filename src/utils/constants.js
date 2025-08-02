@@ -41,6 +41,8 @@ export const BOOKING_STATUS = {
     CANCELLED: "CANCELLED",
 }
 
+export const VERSION = 'VERSION 1.1'
+
 // export const BOOKING_STATUS = {
 //     A: "Booking Requested",
 //     B: "For Client Confirmation",

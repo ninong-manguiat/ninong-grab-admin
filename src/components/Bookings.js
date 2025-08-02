@@ -100,8 +100,15 @@ const Bookings = () => {
     }
 
     const handleChange = (e, {key, value, details}, otherDetails) => {
+        let newValue = value.split('-')
+
+        const selected = otherDetails.filter((i,k)=>{
+            return i.DRIVER_DETAILS.DRIVER_CODE === newValue[0]
+        })
+
         setDriver({
-            ...otherDetails
+            ...selected[0].DRIVER_DETAILS,
+            ACCOUNT_CODE: selected[0].ACCOUNT_CODE
         })
     }
 

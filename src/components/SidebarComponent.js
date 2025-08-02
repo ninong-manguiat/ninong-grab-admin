@@ -2,7 +2,7 @@ import React, {useEffect, useState}from 'react';
 import { Sidebar, Menu, Header, Image, Icon } from 'semantic-ui-react';
 import { useAuth } from "../contexts/AuthContext"
 import firebase from '../firebase'
-import { PAGES } from '../utils/constants';
+import { PAGES, VERSION } from '../utils/constants';
 
 const SidebarComponent = ({
     children,
@@ -96,7 +96,7 @@ const SidebarComponent = ({
             >
                 <Header as='h4' icon textAlign='center' className="headtext">
                     <Header.Content>
-                        {userDetails.name}Jap Dorado
+                        {userDetails.name}{VERSION}
                         <Header.Subheader style={{color: 'white'}}>
                             <i >{userDetails.role}</i>Admin
                         </Header.Subheader>
